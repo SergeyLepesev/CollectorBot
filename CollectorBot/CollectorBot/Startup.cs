@@ -18,6 +18,7 @@ namespace CollectorBot {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddTelegramBotClient(Configuration);
+            services.AddRepositoryAsync(Configuration);
             services.AddTelegramCommand();
 
             services.AddScoped<TelegramCommandService>();
