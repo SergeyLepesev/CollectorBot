@@ -1,4 +1,5 @@
 ﻿using CollectorBot.Extension;
+using CollectorBot.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,9 @@ namespace CollectorBot {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddTelegramBotClient(Configuration);
+            services.AddTelegramCommand();
+
+            services.AddScoped<TelegramCommandService>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env) {

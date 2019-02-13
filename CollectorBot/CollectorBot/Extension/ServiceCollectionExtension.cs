@@ -1,4 +1,5 @@
 using CollectorBot.Extension.Model;
+using CollectorBot.TelegramCommands;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Telegram.Bot;
@@ -11,6 +12,10 @@ namespace CollectorBot.Extension {
             telegramBotClient.SetWebhookAsync(telegramBotParameters.WebHookUrl);
 
             service.AddSingleton<ITelegramBotClient>(telegramBotClient);
+        }
+
+        public static void AddTelegramCommand(this IServiceCollection service) {
+            service.AddScoped<ITelegramCommand, HelpCommand>();
         }
     }
 }
