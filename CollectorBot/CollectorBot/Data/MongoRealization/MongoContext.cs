@@ -6,7 +6,7 @@ using MongoDB.Bson.Serialization.IdGenerators;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 
-namespace CollectorBot.Data {
+namespace CollectorBot.Data.MongoRealization {
     public class MongoContext {
         private readonly IMongoDatabase _database;
 
@@ -14,6 +14,20 @@ namespace CollectorBot.Data {
             var client = new MongoClient(mongo.ConnectionString);
 
             BsonClassMap.RegisterClassMap<User>(cm => {
+                cm.AutoMap();
+                cm.MapIdMember(c => c.Id)
+                    .SetIdGenerator(StringObjectIdGenerator.Instance)
+                    .SetSerializer(new StringSerializer(BsonType.ObjectId));
+            });
+
+            BsonClassMap.RegisterClassMap<Transaction>(cm => {
+                cm.AutoMap();
+                cm.MapIdMember(c => c.Id)
+                    .SetIdGenerator(StringObjectIdGenerator.Instance)
+                    .SetSerializer(new StringSerializer(BsonType.ObjectId));
+            });
+
+            BsonClassMap.RegisterClassMap<PendingTransaction>(cm => {
                 cm.AutoMap();
                 cm.MapIdMember(c => c.Id)
                     .SetIdGenerator(StringObjectIdGenerator.Instance)

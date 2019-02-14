@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using MongoDB.Driver;
 
-namespace CollectorBot.Data {
+namespace CollectorBot.Data.MongoRealization {
     public class MongoDbRepositoryAsync<T> : IRepositoryAsync<T> where  T : class {
         private readonly MongoContext _database;
 
