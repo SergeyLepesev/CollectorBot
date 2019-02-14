@@ -12,7 +12,7 @@ namespace CollectorBot.Data.MongoRealization.ConstraintsMechanism {
             InitConstrainers();
         }
 
-        public void GetConstrainers<T>(T entity) {
+        public void InvokeConstrainEntity<T>(T entity) {
             if (typeof(T) == typeof(User)) {
                 Invoke(entity as User, _userConstrainer);
             }
