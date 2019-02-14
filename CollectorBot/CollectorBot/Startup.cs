@@ -19,6 +19,7 @@ namespace CollectorBot {
 
             services.AddTelegramBotClient(Configuration);
             services.AddRepositoryAsync(Configuration);
+            services.AddSettings(Configuration);
             services.AddTelegramCommand();
 
             services.AddScoped<TelegramCommandService>();
