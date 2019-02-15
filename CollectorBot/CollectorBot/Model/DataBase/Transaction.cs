@@ -9,7 +9,6 @@ namespace CollectorBot.Model.DataBase {
         public string Comment { get; set; }
         public DateTime CreationDate { get; set; } = DateTime.Now;
         public DateTime ResolveDate { get; set; }
-        public bool? Decision { get; set; }
-        public bool IsPending { get; set; }
+        public Status Status { get; set; }
     }
 }

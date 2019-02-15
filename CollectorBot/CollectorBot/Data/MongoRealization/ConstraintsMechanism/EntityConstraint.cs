@@ -1,31 +1,20 @@
-using System.Collections.Generic;
 using CollectorBot.Data.MongoRealization.ConstraintsMechanism.Constrainers;
 using CollectorBot.Model.DataBase;
 
 namespace CollectorBot.Data.MongoRealization.ConstraintsMechanism {
     public class EntityConstraint {
         private readonly IRepositoryAsync<User> _userRepository;
-        private List<IConstrainer<User>> _userConstrainer;
+        private readonly UserConstrainer _userConstrainer;
 
         public EntityConstraint(IRepositoryAsync<User> userRepository) {
             _userRepository = userRepository;
-            InitConstrainers();
+            _userConstrainer = new UserConstrainer(userRepository);
         }
 
-        public void InvokeConstrainEntity<T>(T entity) {
+        public void InvokeConstrainEntity<T>(T entity, RepositoryMethod method) {
             if (typeof(T) == typeof(User)) {
-                Invoke(entity as User, _userConstrainer);
+                _userConstrainer.InvokeConstrain(entity as User, method);
             }
-        }
-
-        private void Invoke<T>(T entity, List<IConstrainer<T>> handlers) {
-            handlers.ForEach(h => h.Constrain(entity));
-        }
-
-        private void InitConstrainers() {
-            _userConstrainer = new List<IConstrainer<User>>{
-                new UserNameUnique(_userRepository)
-            };
         }
     }
 }
