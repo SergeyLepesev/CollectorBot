@@ -19,6 +19,7 @@ namespace CollectorBot {
 
             services.AddTelegramBotClient(Configuration);
             services.AddRepositoryAsync(Configuration);
+            services.AddSettings(Configuration);
             services.AddTelegramCommand();
 
             services.AddScoped<TelegramCommandService>();
@@ -31,9 +32,7 @@ namespace CollectorBot {
             else {
                 app.UseHsts();
             }
-
-            app.UseHttpsRedirection();
-            app.UseMvc();
+            app.UseMvcWithDefaultRoute();
         }
     }
 }

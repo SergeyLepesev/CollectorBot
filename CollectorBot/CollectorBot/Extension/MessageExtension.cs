@@ -6,7 +6,7 @@ namespace CollectorBot.Extension {
             return message.Chat.Id;
         }
 
-        public static int GetUserId(this Message message) {
+        public static int GetTelegramUserId(this Message message) {
             return message.From.Id;
         }
     }
