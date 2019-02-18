@@ -2,12 +2,11 @@ using CollectorBot.Data.MongoRealization.ConstraintsMechanism.Constrainers;
 using CollectorBot.Model.DataBase;
 
 namespace CollectorBot.Data.MongoRealization.ConstraintsMechanism {
-    public class EntityConstraint {
-        private readonly IRepositoryAsync<User> _userRepository;
+    public class MongoConstrain {
         private readonly UserConstrainer _userConstrainer;
 
-        public EntityConstraint(IRepositoryAsync<User> userRepository) {
-            _userRepository = userRepository;
+        public MongoConstrain(MongoContext context) {
+            var userRepository = context.GetItems<User>();
             _userConstrainer = new UserConstrainer(userRepository);
         }
 

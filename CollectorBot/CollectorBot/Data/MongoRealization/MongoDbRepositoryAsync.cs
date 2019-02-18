@@ -8,11 +8,11 @@ using MongoDB.Driver;
 namespace CollectorBot.Data.MongoRealization {
     public class MongoDbRepositoryAsync<T> : IRepositoryAsync<T> where  T : class {
         private readonly MongoContext _database;
-        private readonly EntityConstraint _entityConstraint;
+        private readonly MongoConstrain _mongoConstrain;
 
-        public MongoDbRepositoryAsync(MongoContext mongoContext, EntityConstraint entityConstraint) {
+        public MongoDbRepositoryAsync(MongoContext mongoContext) {
             _database = mongoContext;
-            _entityConstraint = entityConstraint;
+            _mongoConstrain = new MongoConstrain(mongoContext);
         }
 
         public async Task<IEnumerable<T>> GetItems(Expression<Func<T, bool>> filter = null) {
@@ -26,7 +26,7 @@ namespace CollectorBot.Data.MongoRealization {
         }
 
         public async Task Create(T item) {
-            _entityConstraint.InvokeConstrainEntity(item, RepositoryMethod.Create);
+            _mongoConstrain.InvokeConstrainEntity(item, RepositoryMethod.Create);
             await _database.GetItems<T>().InsertOneAsync(item);
         }
 

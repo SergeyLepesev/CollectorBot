@@ -1,20 +1,19 @@
-using System;
-using System.Linq;
 using System.Threading.Tasks;
 using CollectorBot.Exception;
 using CollectorBot.Model.DataBase;
+using MongoDB.Driver;
 
 namespace CollectorBot.Data.MongoRealization.ConstraintsMechanism.Constrainers.ConcreteConstrainers {
     public class UserNameUnique : IConcreteConstrainer<User> {
-        private readonly IRepositoryAsync<User> _userRepository;
+        private readonly IMongoCollection<User> _userRepository;
 
-        public UserNameUnique(IRepositoryAsync<User> userRepository) {
+        public UserNameUnique(IMongoCollection<User> userRepository) {
             _userRepository = userRepository;
         }
 
         public async Task Constrain(User entity) {
-            var userWithSameName = await _userRepository.GetItems(u => u.Name == entity.Name);
-            if (userWithSameName.Any()) {
+            var userWithSameName = await _userRepository.Find(u => u.Name == entity.Name).FirstOrDefaultAsync();
+            if (userWithSameName is null) {
                 throw new CollectorException($"Username {entity.Name} already exists");
             }
         }

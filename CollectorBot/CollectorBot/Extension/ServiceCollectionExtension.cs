@@ -24,7 +24,6 @@ namespace CollectorBot.Extension {
 
         public static void AddRepositoryAsync(this IServiceCollection service, IConfiguration configuration) {
             var mongoParameters = configuration.GetSection("MongoDB").Get<MongoParameters>();
-            service.AddSingleton<EntityConstraint>();
             service.AddSingleton(mongoParameters);
             service.AddSingleton<MongoContext>();
             service.AddSingleton(typeof(IRepositoryAsync<>), typeof(MongoDbRepositoryAsync<>));
