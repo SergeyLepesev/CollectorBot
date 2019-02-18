@@ -26,7 +26,7 @@ namespace CollectorBot.Data.MongoRealization {
         }
 
         public async Task Create(T item) {
-            _entityConstraint.InvokeConstrainEntity(item);
+            _entityConstraint.InvokeConstrainEntity(item, RepositoryMethod.Create);
             await _database.GetItems<T>().InsertOneAsync(item);
         }
 

@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using CollectorBot.Data;
+using CollectorBot.Exception;
 using CollectorBot.Extension;
 using CollectorBot.Model;
 using Telegram.Bot;
@@ -8,45 +9,48 @@ using User = CollectorBot.Model.DataBase.User;
 
 namespace CollectorBot.TelegramCommands {
     public class SignInCommand : ITelegramCommand {
+        private const int UserNameIndex = 2;
+        private const int PasswordIndex = 1;
+
         private readonly IRepositoryAsync<User> _userRepository;
         private readonly ITelegramBotClient _client;
         private readonly Settings _settings;
+
         public string Name => "signin";
+
         public SignInCommand(IRepositoryAsync<User> userRepository, ITelegramBotClient client, Settings settings) {
             _userRepository = userRepository;
             _client = client;
             _settings = settings;
         }
+
         public async Task ExecuteAsync(Message message) {
-            var messageStr = message.Text;
-            var password = GetPassword(messageStr);
+            var password = GetPassword(message.Text);
             var chatId = message.GetChatId();
             if (!ValidPassword(password)) {
-                await _client.SendTextMessageAsync(chatId, "Wrond password");
+                await _client.SendTextMessageAsync(chatId, "Wrong password");
                 return;
             }
-
-            var userName = GetUserName(messageStr);
-            var user = await _userRepository.GetItem(u => u.Name == userName);
-            if (user != null) {
-                await _client.SendTextMessageAsync(chatId, "You already add");
-                return;
+            var newUser = CreateNewUser(GetUserName(message.Text), message.GetTelegramUserId());
+            try {
+                await _userRepository.Create(newUser);
             }
-
-            var newUser = CreateNewUser(message);
-            await _userRepository.Create(newUser);
-            await _client.SendTextMessageAsync(chatId, $"User with name = {newUser.Name} success added");
+            catch (CollectorException ex) {
+                await _client.SendTextMessageAsync(chatId, ex.Message);
+            }
+            
+            await _client.SendTextMessageAsync(chatId, $"User with name = {newUser.Name} added successfully");
         }
 
-        private User CreateNewUser(Message message) {
+        private User CreateNewUser(string name, long telegramUserId) {
             return new User{
-                Name = GetUserName(message.Text),
-                TelegramUserId = message.From.Id
+                Name = name,
+                TelegramUserId = telegramUserId
             };
         }
 
-        private bool ValidPassword(string password) => password == _settings[password];
-        private string GetPassword(string message) => message.Split(' ')[1];
-        private string GetUserName(string message) => message.Split(' ')[2];
+        private bool ValidPassword(string password) => password == _settings["Password"];
+        private string GetPassword(string message) => message.Split(' ')[PasswordIndex];
+        private string GetUserName(string message) => message.Split(' ')[UserNameIndex];
     }
 }
