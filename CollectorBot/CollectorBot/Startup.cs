@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using CollectorBot.Extension;
+using CollectorBot.Services;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -14,6 +16,13 @@ namespace CollectorBot {
 
         public void ConfigureServices(IServiceCollection services) {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddTelegramBotClient(Configuration);
+            services.AddRepositoryAsync(Configuration);
+            services.AddSettings(Configuration);
+            services.AddTelegramCommand();
+
+            services.AddScoped<TelegramCommandService>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env) {
@@ -23,9 +32,7 @@ namespace CollectorBot {
             else {
                 app.UseHsts();
             }
-
-            app.UseHttpsRedirection();
-            app.UseMvc();
+            app.UseMvcWithDefaultRoute();
         }
     }
 }
