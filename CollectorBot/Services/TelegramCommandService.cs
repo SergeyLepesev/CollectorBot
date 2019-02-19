@@ -19,7 +19,9 @@ namespace CollectorBot.Services {
         }
 
         public async Task ExecuteCommand(Message message) {
-            var command = _commands.SingleOrDefault(c => message.Text.Contains($"/{c.Name}"));
+            var command = _commands.SingleOrDefault(c =>
+                message.Text.ToLower().Contains($"/{c.Name.ToLower()}")
+            );
 
             if (command is null) {
                 await _client.SendTextMessageAsync(
