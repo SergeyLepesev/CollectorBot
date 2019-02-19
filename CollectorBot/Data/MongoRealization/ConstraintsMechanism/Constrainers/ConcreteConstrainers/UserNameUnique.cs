@@ -13,7 +13,7 @@ namespace CollectorBot.Data.MongoRealization.ConstraintsMechanism.Constrainers.C
 
         public async Task Constrain(User entity) {
             var userWithSameName = await _userRepository.Find(u => u.Name == entity.Name).FirstOrDefaultAsync();
-            if (userWithSameName is null) {
+            if (userWithSameName != null) {
                 throw new CollectorException($"Username {entity.Name} already exists");
             }
         }
