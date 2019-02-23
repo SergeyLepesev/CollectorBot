@@ -16,9 +16,7 @@ namespace CollectorBot.Data.MongoRealization {
         }
 
         public async Task<IEnumerable<T>> GetItems(Expression<Func<T, bool>> filter = null) {
-            return filter is null
-                   ? await _database.GetItems<T>().Find(Builders<T>.Filter.Empty).ToListAsync()
-                   : await _database.GetItems<T>().Find(filter).ToListAsync();
+            return await _database.GetItems<T>().Find(filter ?? Builders<T>.Filter.Empty).ToListAsync();
         }
 
         public async Task<T> GetItem(Expression<Func<T, bool>> filter) {
