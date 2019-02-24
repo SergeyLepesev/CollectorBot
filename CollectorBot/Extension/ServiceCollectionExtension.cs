@@ -20,6 +20,9 @@ namespace CollectorBot.Extension {
         public static void AddTelegramCommand(this IServiceCollection service) {
             service.AddScoped<ITelegramCommand, HelpCommand>();
             service.AddScoped<ITelegramCommand, SignInCommand>();
+            service.AddScoped<ITelegramCommand, IGaveCommand>();
+            service.AddScoped<ITelegramCommand, ApproveCommand>();
+            service.AddScoped<ITelegramCommand, DisapproveCommand>();
         }
 
         public static void AddRepositoryAsync(this IServiceCollection service, IConfiguration configuration) {
