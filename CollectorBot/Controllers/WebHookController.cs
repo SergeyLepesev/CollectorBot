@@ -15,11 +15,20 @@ namespace CollectorBot.Controllers {
 
         [HttpPost("webhook")]
         public async Task<IActionResult> Process(Update update) {
-            if (update.Message is null) {
+
+            if (update.Message != null)
+            {
+                await _commandService.ExecuteCommand(update.Message);
+            }   
+            else if (update.CallbackQuery != null)
+            {
+                await _commandService.Process(update);
+            }
+            else
+            {
                 return BadRequest();
             }
-
-            await _commandService.ExecuteCommand(update.Message);
+                
             return Ok();
         }
     }
